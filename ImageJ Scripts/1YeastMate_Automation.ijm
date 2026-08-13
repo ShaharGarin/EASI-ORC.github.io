@@ -14,6 +14,7 @@ for (img = 0; img < cell_list.length; img++) {
 		img_path = cell_dir + cell_list[img];
 		open(img_path);
 		slices_num = nSlices;
+		og_slices_num = nSlices;
 		//Go over each slice in an image
 		for (slice = 0; slice < slices_num; slice++) {
 			selectWindow(cell_list[img]);
@@ -28,6 +29,7 @@ for (img = 0; img < cell_list.length; img++) {
 		//Find slice with max amount of cells
 		max_cell_num = 0;
 		max_slice = 0;
+		slices_num = nSlices;
 		for (slice = 0; slice < slices_num; slice++) {
 			selectWindow(stacked_mask);
 			setSlice(slice + 1);
@@ -45,8 +47,8 @@ for (img = 0; img < cell_list.length; img++) {
 		setSlice(max_slice + 1);
 		run("Duplicate...", "title=[Max Slice]");
 		run("Convert to Mask");
-		run("Invert LUTs");
-		for (slice = 0; slice < (slices_num - 1); slice++) {
+		
+		for (slice = 0; slice < (og_slices_num - 1); slice++) {
 			run("Duplicate...", " ");
 		}
 		run("Images to Stack", "  title=Max use");

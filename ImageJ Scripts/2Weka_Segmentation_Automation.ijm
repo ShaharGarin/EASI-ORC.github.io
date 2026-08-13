@@ -45,13 +45,12 @@ for (file = 0; file < file_list.length; file++) {
 			}
 			selectWindow(weka_window);
 			call("trainableSegmentation.Weka_Segmentation.loadClassifier", classifier_path);
-			call("trainableSegmentation.Weka_Segmentation.getProbability");
-			while (!isOpen("Probability maps")) {
+			call("trainableSegmentation.Weka_Segmentation.getResult");
+			while (!isOpen("Classified image")) {
 				wait(100);
 			}
-			selectWindow("Probability maps");
+			selectWindow("Classified image");
 			wait(50);
-			run("Delete Slice");
 			saveAs("tiff", temp_maps_folder + File.separator + plane_list[plane]);
 			//Force garbage collection (important for large images)
 			run("Close All");
@@ -68,7 +67,9 @@ for (file = 0; file < file_list.length; file++) {
 		run("Images to Stack", "name=" + file_list[file] + "");
 		saveAs("tiff", prob_map_folder + File.separator + file_list[file] + "_map");
 		// Create binary images and save them
-		run("Make Binary", "background=Light calculate create");
+		run("Convert to Mask", "background=Dark calculate black");
+		run("Invert", "stack");
+		run("Invert LUTs");
 		saveAs("tiff", masks_folder + File.separator + file_list[file] + "_mask");
 		run("Close All");
 		//Delete uneeded files and folders
